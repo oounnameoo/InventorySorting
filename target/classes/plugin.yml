@@ -1,0 +1,6 @@
+name: InvSort
+version: '1.0.0'
+main: com.example.invsort.InvSortPlugin
+api-version: '26.1'
+description: "Sort hotbar, main inventory, or chests — double-click or middle-click any slot"
+author: YourName
