@@ -1,6 +1,7 @@
 # InvSort
 
 [![Build](https://github.com/YOUR_USERNAME/invsort/actions/workflows/build.yml/badge.svg)](https://github.com/YOUR_USERNAME/invsort/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A lightweight [Paper](https://papermc.io/) plugin that sorts your inventory or any chest with a **double-click** — no commands, no config, no fuss.
 
