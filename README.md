@@ -11,7 +11,7 @@ A lightweight [Paper](https://papermc.io/) plugin that sorts your inventory or a
 
 - **Double-click to sort** — works on the hotbar, main inventory, and external containers (chests, barrels, etc.).
 - **Smart stack merging** — identical items are merged before sorting, then split back into legal max-stack sizes.
-- **Minecraft category ordering** — items are grouped by Minecraft's built-in creative-mode categories (Building Blocks, Decorations, Redstone, Transportation, Misc, Food, Tools, Combat, Brewing), then sorted A → Z by material name, with the largest stacks placed first within each group.
+- **Category ordering** — items are grouped into practical categories (Food, Brewing, Combat, Tools, Redstone, Transportation, Ores, Wood, Stone/Natural, Misc), then sorted A → Z by material name, with the largest stacks placed first within each group.
 - **Meta-aware** — enchanted books, named items, and other items with unique metadata are never merged with plain items of the same type.
 - **Safe interaction** — sorting is cancelled if the cursor is holding an item to prevent any duplication edge cases.
 - **Zero configuration** — drop it in and it works.
@@ -35,7 +35,7 @@ A lightweight [Paper](https://papermc.io/) plugin that sorts your inventory or a
 1. All non-empty items in the target region are collected.
 2. Identical stacks (same material + same item meta) are merged together.
 3. Merged totals are split back into stacks no larger than the item's max stack size.
-4. Stacks are sorted by **Minecraft creative category** (Building Blocks → Decorations → Redstone → Transportation → Misc → Food → Tools → Combat → Brewing), then **alphabetically by material name**, then by **amount descending** within each group.
+4. Stacks are sorted by **category** (Food → Brewing → Combat → Tools → Redstone → Transportation → Ores → Wood → Stone/Natural → Misc), then **alphabetically by material name**, then by **amount descending** within each group.
 5. Sorted items are placed back from slot 0 / the first slot of the region onward.
 
 ---
