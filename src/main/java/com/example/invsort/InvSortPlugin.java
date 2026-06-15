@@ -25,6 +25,11 @@ public class InvSortPlugin extends JavaPlugin implements Listener {
     private static final int MAIN_FIRST   = 9;
     private static final int MAIN_LAST    = 35;
 
+    /** Broad categories used to group sorted items. */
+    private enum Category {
+        ORE, WOOD, STONE, OTHER
+    }
+
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
@@ -152,9 +157,10 @@ public class InvSortPlugin extends JavaPlugin implements Listener {
             }
         }
 
-        // Sort: alphabetical by type, then largest stacks first
+        // Sort: category first, then alphabetical by type, then largest stacks first
         finalItems.sort(
-                Comparator.comparing((ItemStack i) -> i.getType().name())
+                Comparator.comparing((ItemStack i) -> getCategory(i.getType()))
+                          .thenComparing((ItemStack i) -> i.getType().name())
                           .thenComparing(Comparator.comparingInt(ItemStack::getAmount).reversed())
         );
 
@@ -171,5 +177,102 @@ public class InvSortPlugin extends JavaPlugin implements Listener {
             sb.append('|').append(item.getItemMeta());
         }
         return sb.toString();
+    }
+
+    /**
+     * Categorizes a material into ore, wood, stone, or other.
+     * Checks are ordered so ores and woods are detected before stone.
+     */
+    private Category getCategory(Material material) {
+        String name = material.name();
+
+        // ── Ores & minerals ───────────────────────────────────────────────────
+        if (name.endsWith("_ORE")
+                || name.endsWith("_INGOT")
+                || name.endsWith("_NUGGET")
+                || name.startsWith("RAW_")
+                || name.equals("COAL")
+                || name.equals("CHARCOAL")
+                || name.equals("REDSTONE")
+                || name.equals("GLOWSTONE_DUST")
+                || name.equals("LAPIS_LAZULI")
+                || name.equals("DIAMOND")
+                || name.equals("EMERALD")
+                || name.equals("QUARTZ")
+                || name.equals("AMETHYST_SHARD")
+                || name.equals("AMETHYST_CLUSTER")
+                || name.equals("FLINT")
+                || name.equals("NETHERITE_SCRAP")
+                || name.equals("NETHERITE_INGOT")) {
+            return Category.ORE;
+        }
+
+        // ── Wood & wooden items ───────────────────────────────────────────────
+        if (name.contains("_LOG")
+                || name.contains("_WOOD")
+                || name.contains("_PLANKS")
+                || name.contains("_SAPLING")
+                || name.contains("_LEAVES")
+                || name.contains("_BUTTON") && !name.contains("STONE") && !name.contains("POLISHED")
+                || name.contains("_DOOR") && !name.contains("IRON")
+                || name.contains("_TRAPDOOR") && !name.contains("IRON")
+                || name.contains("_FENCE") && !name.contains("NETHER")
+                || name.contains("_GATE")
+                || name.contains("_SLAB") && isWoodenSlab(name)
+                || name.contains("_STAIRS") && isWoodenStairs(name)
+                || name.contains("_SIGN")
+                || name.contains("_HANGING_SIGN")
+                || name.contains("_BOAT")
+                || name.equals("STICK")
+                || name.equals("BOWL")
+                || name.equals("MANGROVE_ROOTS")
+                || name.equals("BAMBOO")
+                || name.equals("SUGAR_CANE")
+                || name.equals("PAPER")) {
+            return Category.WOOD;
+        }
+
+        // ── Stone & stone-like blocks ─────────────────────────────────────────
+        if (name.contains("STONE")
+                || name.contains("COBBLE")
+                || name.contains("ANDESITE")
+                || name.contains("DIORITE")
+                || name.contains("GRANITE")
+                || name.contains("DEEPSLATE")
+                || name.contains("TUFF")
+                || name.contains("CALCITE")
+                || name.contains("DRIPSTONE")
+                || name.contains("SANDSTONE")
+                || name.contains("RED_SANDSTONE")
+                || name.contains("TERRACOTTA")
+                || name.contains("BRICK")
+                || name.contains("BLACKSTONE")
+                || name.contains("BASALT")
+                || name.contains("OBSIDIAN")
+                || name.contains("NETHERRACK")
+                || name.contains("END_STONE")
+                || name.contains("QUARTZ_BLOCK")
+                || name.contains("SMOOTH_QUARTZ")
+                || name.contains("PRISMARINE")
+                || name.equals("POINTED_DRIPSTONE")
+                || name.equals("CLAY")
+                || name.equals("GRAVEL")
+                || name.equals("SAND")
+                || name.equals("RED_SAND")) {
+            return Category.STONE;
+        }
+
+        return Category.OTHER;
+    }
+
+    private boolean isWoodenSlab(String name) {
+        return name.contains("OAK") || name.contains("SPRUCE") || name.contains("BIRCH")
+                || name.contains("JUNGLE") || name.contains("ACACIA") || name.contains("DARK_OAK")
+                || name.contains("MANGROVE") || name.contains("CHERRY") || name.contains("BAMBOO")
+                || name.contains("CRIMSON") || name.contains("WARPED");
+    }
+
+    private boolean isWoodenStairs(String name) {
+        return isWoodenSlab(name);
     }
 }
